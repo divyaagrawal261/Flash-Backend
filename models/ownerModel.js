@@ -10,6 +10,15 @@ const ownerSchema = mongoose.Schema({
         required:[true, "Owner handle is required"],
         unique:[true, "Owner handle already taken"]
     },
+    DOB:{
+        type:String,
+        required:[true, "Please enter your Date of Birth"]
+    },
+    phone:{
+        type:Number,
+        unique:[true, "Phone Number already taken"],
+        required:[true, "Please provide the contact number"]
+    },
     email:{
         type:String,
         unique:[true, "Owner Email already in user"],

@@ -11,7 +11,19 @@ const playerSchema = mongoose.Schema({
         required:[true, "User handle is required"]
     },
     bookings:{
-        type:Array
+        type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'playground' }]
+    },
+    DOB:{
+        type:String,
+        required:[true, "Please enter your Date of Birth"]
+    },
+    phone:{
+        type:Number,
+        unique:[true, "Phone Number already taken"],
+        required:[true, "Please provide the contact number"]
+    },
+    perferredSports:{
+        type:String,
     },
     email:{
         type:String,

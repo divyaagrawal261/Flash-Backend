@@ -19,6 +19,10 @@ const playgroundSchema = mongoose.Schema({
         required:[true, "Playground timings are required"],
         default: "24 X 7"
     },
+    type:{
+        type:String,
+        required:[true, "Please enter the type of Venue"]
+    },
     sports:{
         type:String,
         required:[true, "Sports allowed are required"]
@@ -27,7 +31,11 @@ const playgroundSchema = mongoose.Schema({
         type:Number,
         required:[true, "Price per hour is required"],
         default: 0
-    }
+    },
+    slots:[
+        {type:mongoose.Schema.ObjectId,
+        ref:"slot",
+    }]
 })
 
 export const playground = new mongoose.model("playground", playgroundSchema);
