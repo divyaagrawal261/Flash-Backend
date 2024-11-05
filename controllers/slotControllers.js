@@ -1,11 +1,11 @@
 import {slots} from "../models/slotModel.js";
 import {playground} from "../models/playgroundModel.js";
 
-//POST /new/:playgroundId :slotId
+//POST /new/:playgroundId
 //Create a new slot
 export const createSlot = async(req, res)=>{
     const {_id} = req.owner;
-    const {playgroundId} = req.query.params;
+    const {playgroundId} = req.query;
     try{
         const existingPlayground = await playground.findById(playgroundId);
         
@@ -38,7 +38,7 @@ export const createSlot = async(req, res)=>{
 //Delete an existing slot
 export const deleteSlot = async(req, res)=>{
     const {_id} = req.owner;
-    const slotId = req.query.params;
+    const slotId = req.query;
     try{
         if(await slots.findById(slotId))
             res.status(404).json("Slot doesn't exist");
@@ -65,7 +65,7 @@ export const deleteSlot = async(req, res)=>{
 //GET /all/:playgroundId
 //Show all slots for the given playground
 export const showAllSlots = async(req, res) =>{
-    const {playgroundId} = req.query.params;
+    const {playgroundId} = req.query;
 
     try{
         const existingPlayground = await playground.findById(playgroundId);

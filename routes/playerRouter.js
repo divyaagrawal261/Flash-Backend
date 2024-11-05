@@ -10,11 +10,12 @@ import {
 
 const Router = express.Router();
 
+Router.post("/register", registerPlayer)
+.post("/login", loginPlayer)
+
 Router.use("/", validateToken)
-  .post("/register", registerPlayer)
-  .post("/login", loginPlayer)
   .get("/profile", getLoggedInUser)
-  .put("/book/:slotId", bookSlot)
+  .put("/book", bookSlot)
   .get("/bookings", allSlots);
 
 export default Router;

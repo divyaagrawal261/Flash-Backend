@@ -5,13 +5,13 @@ import validateToken from "../middlewares/validateTokenHandler.js";
 const Router = express.Router();
 
 Router.get("/all", showAllPlaygrounds)
-    .get("/detail/:id", getSpecificPlayground)
-    .get("/owner/:id", showByOwner)
-    .get("/search/:keyword", searchPlayground)
+    .get("/detail", getSpecificPlayground)
+    .get("/owner", showByOwner)
+    .get("/search", searchPlayground)
 
 Router.use("/", validateToken)
     .post("/new", newPlayground)
-    .delete("/delete/:id", deletePlayground)
-    .put("/update/:id", updatePlayground)
+    .delete("/delete", deletePlayground)
+    .put("/update", updatePlayground)
 
 export default Router;

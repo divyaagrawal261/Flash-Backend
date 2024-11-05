@@ -28,18 +28,21 @@ export const registerOwner = async(req, res)=>{
 //POST /login
 //Login user
 export const loginOwner = async (req, res)=>{
-    const {email, phone, password} = req.body;
+    const {email, password} = req.body;
 
     try {
-        const existingUser = await owner.findOne({email}) || await owner.findOne({phone});
+        const existingUser = await owner.findOne({email});
 
         if(!existingUser)
             throw new Error("User not found");
 
-        if(await bcrypt.compare(existingUser.password, password))
+        if(await bcrypt.compare(password,existingUser.password))
         {
             const token=jwt.sign({owner:existingUser}, process.env.ACCESS_TOKEN_SECRET, {expiresIn:"3h"});
             res.status(200).json({token});
+        }
+        else{
+            res.status(403).json("Invalid Credentials");
         }
     }
     catch(err){
