@@ -5,6 +5,10 @@ const playgroundSchema = mongoose.Schema({
         type:String,
         required:[true, "Playground name is required"]
     },
+    imgUrl:{
+        type:String,
+        required:[true, "Please provide an image URL"]
+    },
     ownerId:{
         type:mongoose.Schema.ObjectId,
         ref:"owner",

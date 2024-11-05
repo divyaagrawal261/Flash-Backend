@@ -77,7 +77,7 @@ export const deletePlayground = async (req, res) => {
 //Create a playground
 export const newPlayground = async (req, res) => {
     const { name, location, timings, sports, price } = req.body;
-    const { ownerId } = req.owner._id;
+    const  ownerId  = req.owner._id;
     try {
         const result = await playground.create({ name, timings, location, sports, price, ownerId });
 
@@ -105,6 +105,31 @@ export const updatePlayground = async (req, res) => {
             throw new Error("Error updating playground");
 
         res.status(201).json(result);
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json(err.message);
+    }
+}
+
+
+// GET /search/:keyword
+// Keyword-based search for a playground
+export const searchPlayground = async (req, res) => {
+    const { keyword } = req.query.params;
+    try {
+        const playgrounds = await playground.find({
+            $or: [
+                { name: { $regex: keyword, $options: 'i' } }, 
+                { location: { $regex: keyword, $options: 'i' } },
+                { sports : {$regex: keyword, $options: 'i'} }, 
+            ]
+        });
+
+        if (playgrounds.length === 0)
+            throw new Error("No playgrounds found");
+
+        res.status(200).json(playgrounds);
     }
     catch (err) {
         console.log(err);

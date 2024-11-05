@@ -11,7 +11,7 @@ const playerSchema = mongoose.Schema({
         required:[true, "User handle is required"]
     },
     bookings:{
-        type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'playground' }]
+        type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'slot' }]
     },
     DOB:{
         type:String,

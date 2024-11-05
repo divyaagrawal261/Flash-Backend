@@ -38,7 +38,7 @@ export const loginPlayer = async (req, res)=>{
 
         if(await bcrypt.compare(existingUser.password, password))
         {
-            const token=jwt.sign({existingUser}, process.env.ACCESS_TOKEN_SECRET, {expiresIn:"3h"});
+            const token=jwt.sign({player:existingUser}, process.env.ACCESS_TOKEN_SECRET, {expiresIn:"3h"});
             res.status(200).json({token});
         }
     }
@@ -71,18 +71,52 @@ export const getLoggedInUser= async(req, res)=>{
     }
 }
 
-//POST /book/:playgroundId
-//Book a playground
-export const bookAVenue = async(req, res)=>{
-    const {playgroundId}=req.query.params;
-    const {_id} = req.player;
+//PUT /book/:slotId
+//Book the slot with the provided slotId
+export const bookSlot = async(req, res) =>{
+    const {slotId} = req.query.params;
     try{
-        const requestingPlayer = await player.findById(_id);
-        const requestedPlayround = await 
+        const existingSlot = await slots.findById(slotId);
+
+        if(!existingSlot)
+            res.status(404).json("Slot does not exist");
+
+        const confirmedBookings = existingSlot.players.length();
+
+        if(confirmedBookings == existingSlot.size)
+            res.status(403).json("Slot full!");
+
+        const {_id} = req.player;
+
+        const loggedInPlayer = await player.findById(_id);
+
+        loggedInPlayer.bookings.push(slotId);
+        slotId.players.push(loggedInPlayer._id);
+
+        res.status(200).json("Slot booked successfully");
     }
     catch(err)
     {
         console.log(err);
-        res.status(500).json(err.message);
+        res.status(500).json(err.message);       
+    }
+}
+
+//GET /bookings
+//Show all bookings of a player
+export const allSlots = async(req,res)=>{
+    const {_id} = req.player;
+    try{
+        const bookedSlots = await player.findById(_id).populate(bookings);
+        
+        if(!bookedSlots)
+            res.status(404).json("Couldn't display slots");
+
+        res.status(200).json(bookedSlots);
+    }
+    catch(err)
+    {
+        console.log(err);
+        res.status(500).json(err.message);        
     }
 }
