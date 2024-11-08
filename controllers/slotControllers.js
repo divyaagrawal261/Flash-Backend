@@ -86,3 +86,22 @@ export const showAllSlots = async(req, res) =>{
         res.status(500).json(err.message);
     }
 }
+
+//GET /details/:slotId
+//Give detail view of a slot
+export const slotDetail = async(req, res)=>{
+    const {slotId} = req.query;
+    try{
+        const existingSlot = await slots.findById(slotId).populate("playgroundId ownerId");
+
+        if(!existingSlot)
+            res.status(404).json("Slot doesn't exist");
+
+        res.status(200).json(existingSlot);
+    }
+    catch(err)
+    {
+        console.log(err);
+        res.status(500).json(err.message);
+    }
+}
