@@ -1,4 +1,2 @@
 - Edit Player
 - Delete Player
-- improve errorHandler for Duplicate Key in Owners
-- improve /book route of player, "existingSlot.players.length is not a function" is not defined when Owner is passed as player

@@ -11,6 +11,17 @@ export const registerPlayer = async (req, res) => {
 
   try {
     const userhandle = name.toString().split(" ")[0] + nanoid(4);
+
+    const existingPlayer = await playground.find({
+      $or: [
+          { phone: { $regex: phone , $options: 'i' } },
+          { email : {$regex: email, $options: 'i'} }, 
+      ]
+  });
+  
+  if(existingPlayer)
+    res.status(403).json({message: "Email or Phone already taken"});
+
     const hashedPassword = await bcrypt.hash(password, 10);
     const newPlayer = await player.create({
       name,

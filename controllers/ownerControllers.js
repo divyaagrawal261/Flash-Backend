@@ -11,6 +11,17 @@ export const registerOwner = async(req, res)=>{
     try{
         const userhandle = name.toString() +nanoid(4);
         const hashedPassword = await bcrypt.hash(password, 10);
+
+        const existingOwner = await playground.find({
+            $or: [
+                { phone: { $regex: phone , $options: 'i' } },
+                { email : {$regex: email, $options: 'i'} }, 
+            ]
+        });
+        
+        if(existingOwner)
+          res.status(403).json({message: "Email or Phone already taken"});
+      
         const newOwner = await owner.create({name, DOB, phone, email, password:hashedPassword, ownerHandle:userhandle});
 
         if(!newOwner)
