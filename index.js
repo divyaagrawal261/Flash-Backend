@@ -22,9 +22,10 @@ app.listen(port,()=>{
     console.log(`Server is listening on the port ${port}...`);
 });
 
-app.get("/health", ()=>
+app.get("/health", async(req, res)=>
 {
     console.log("Server is working fine");
+    res.status(200).json({message:"Server is working fine"});
 })
 app.use("/player", playerRoutes);
 app.use("/playground", playgroundRoutes);

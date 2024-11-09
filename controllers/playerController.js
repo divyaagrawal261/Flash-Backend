@@ -92,7 +92,8 @@ export const bookSlot = async (req, res) => {
 
     const loggedInPlayer = await player.findById(_id);
 
-    console.log(loggedInPlayer);
+    if(!loggedInPlayer)
+      res.status(404).json({message:"Player doesn't exist"});
 
     if (!loggedInPlayer.bookings) {
       loggedInPlayer.bookings = []; // Initialize as an empty array
