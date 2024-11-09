@@ -9,31 +9,35 @@ export const registerOwner = async(req, res)=>{
     const {name, DOB, phone, email, password} = req.body;
 
     try{
-        const userhandle = name.toString() +nanoid(4);
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        const existingOwner = await playground.find({
+        
+        const existingOwner = await owner.findOne({
             $or: [
-                { phone: { $regex: phone , $options: 'i' } },
-                { email : {$regex: email, $options: 'i'} }, 
+                { phone: phone },
+                { email: email }, 
             ]
         });
-        
-        if(existingOwner)
-          res.status(403).json({message: "Email or Phone already taken"});
-      
-        const newOwner = await owner.create({name, DOB, phone, email, password:hashedPassword, ownerHandle:userhandle});
 
-        if(!newOwner)
+        if(existingOwner)
+            res.status(403).json({message: "Email or Phone already taken"});
+        
+        else{
+            const userhandle = name.toString() +nanoid(4);
+ 
+            const hashedPassword = await bcrypt.hash(password, 10);
+            
+            const newOwner = await owner.create({name, DOB, phone, email, password:hashedPassword, ownerHandle:userhandle});
+            
+            if(!newOwner)
             throw new Error("Owner could not be created");
 
         res.status(201).json({newOwner});
-        }
-        catch(err)
-        {
-            console.log(err);
-            res.status(500).json(err.message);
-        }
+    }
+    }
+    catch(err)
+    {
+        console.log(err);
+        res.status(500).json(err.message);
+    }
 }
 
 //POST /login

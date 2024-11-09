@@ -10,18 +10,20 @@ export const registerPlayer = async (req, res) => {
   const { name, DOB, phone, email, password, perferredSports } = req.body;
 
   try {
-    const userhandle = name.toString().split(" ")[0] + nanoid(4);
-
-    const existingPlayer = await playground.find({
+    
+    const existingPlayer = await player.findOne({
       $or: [
-          { phone: { $regex: phone , $options: 'i' } },
-          { email : {$regex: email, $options: 'i'} }, 
+        { phone: phone },
+        { email: email },
       ]
-  });
-  
-  if(existingPlayer)
-    res.status(403).json({message: "Email or Phone already taken"});
-
+    });
+    
+    if(existingPlayer)
+      res.status(403).json({message: "Email or Phone already taken"});
+   
+    else{
+    const userhandle = name.toString().split(" ")[0] + nanoid(4);
+    
     const hashedPassword = await bcrypt.hash(password, 10);
     const newPlayer = await player.create({
       name,
@@ -36,6 +38,7 @@ export const registerPlayer = async (req, res) => {
     if (!newPlayer) throw new Error("Player could not be created");
 
     res.status(201).json({ newPlayer });
+  }
   } catch (err) {
     console.log(err);
     res.status(500).json(err.message);
