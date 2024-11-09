@@ -64,24 +64,32 @@ export const deleteSlot = async(req, res)=>{
 
 //GET /all/:playgroundId
 //Show all slots for the given playground
-export const showAllSlots = async(req, res) =>{
+export const showAllSlots = async(req, res) => {
     const {playgroundId} = req.query;
 
-    try{
+    try {
         const existingPlayground = await playground.findById(playgroundId);
 
-        if(!existingPlayground)
-            res.status(404).json({message:"Playrground does not exist"});
+        if (!existingPlayground)
+            return res.status(404).json({message: "Playground does not exist"});
 
         const allSlots = await slots.find({playgroundId});
 
-        if(!allSlots)
-            res.status(404).json({message: "Could not find slots"});
+        if (!allSlots)
+            return res.status(404).json({message: "Could not find slots"});
 
-        res.status(200).json(allSlots);
-    }
-    catch(err)
-    {
+        const slotsWithPlaygroundName = allSlots.map(slot => ({
+            ...slot.toObject(),
+            playgroundName: existingPlayground.name
+        }));
+
+        const response = {
+             
+            slots: slotsWithPlaygroundName
+        };
+
+        res.status(200).json(response);
+    } catch (err) {
         console.log(err);
         res.status(500).json(err.message);
     }
