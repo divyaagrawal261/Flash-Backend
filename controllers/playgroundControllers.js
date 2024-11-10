@@ -23,13 +23,11 @@ export const showAllPlaygrounds = async (req, res) => {
 //Get details of a particular playground
 export const getSpecificPlayground = async (req, res) => {
     const { id } = req.query;
-    console.log(id);
     try {
         const result = await playground.findById(id);
         if (!result)
-            throw new Error("Error displaying playground");
-        console.log(id);
-
+            res.status(404).json("Playground doesn't exist");
+        else
         res.status(200).json({ result });
     }
     catch (err) {
@@ -108,7 +106,7 @@ export const updatePlayground = async (req, res) => {
         if (!result)
             throw new Error("Error updating playground");
 
-        res.status(201).json(result);
+        res.status(200).json(result);
     }
     catch (err) {
         console.log(err);

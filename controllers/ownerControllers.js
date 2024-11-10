@@ -21,7 +21,7 @@ export const registerOwner = async(req, res)=>{
             res.status(403).json({message: "Email or Phone already taken"});
         
         else{
-            const userhandle = name.toString() +nanoid(4);
+            const userhandle = name.toString().split(" ")[0] + nanoid(4);
  
             const hashedPassword = await bcrypt.hash(password, 10);
             
